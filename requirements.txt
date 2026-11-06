@@ -1,0 +1,21 @@
+# V3 RPA 工作流引擎 — 第三方依赖清单
+# 生成方式：扫描 v3/ 下全部 .py 的 import 语句 + 编译打包依赖
+# 2026-09-24（R6/C4-P3-14）：清理死依赖 python-docx / python-pptx
+#   （其所指向的 steps/ 已于 09-13 物理删除，全库 import 0 命中）；
+#   版本锁定见 requirements.lock（conda CPS-GPES_RPA-py311 pip freeze）。
+# 版本约束：>= 最低兼容版本（与 AGENTS.md §技术栈一致）
+# Python 要求：3.11（实际构建验证环境：conda CPS-GPES_RPA-py311）
+# 2026-10-19（R15/B-74）：为 pandas 补上界；回写实测版本（本次实测环境：
+#   pandas 3.0.5 / PyQt5 5.15.11 / openpyxl 3.1.5 / xlrd 2.0.2 / loguru 0.7.3
+#   / psutil 7.2.2 / pyinstaller 6.22.0）；完整实测清单见 requirements.lock
+
+# ---- 运行依赖（引擎 + GUI）----
+pandas>=2.0,<4       # 数据精加工（ops 导入/导出辅助）；实测 3.0.5，上界防 4.x 破坏性变更
+openpyxl>=3.1        # Excel 读写（ops/excel_preprocessor、ops/exporter）；实测 3.1.5
+xlrd>=2.0            # .xls 读取（ops/excel_preprocessor.py 以 engine="xlrd" 传给 pandas）；实测 2.0.2
+loguru>=0.7          # 日志（全模块）；实测 0.7.3
+psutil>=5.9          # 内存监控（engine/executor.py、ops）；实测 7.2.2
+PyQt5>=5.15,<6       # GUI 框架（gui/ 全部模块）；实测 5.15.11，上界防 6.x 不兼容
+
+# ---- 编译打包依赖（build.bat / RPA_Workflow_v3.spec 需要）----
+pyinstaller>=6.22    # 单文件 exe 打包（实测安装版本 6.22.0）

@@ -1,0 +1,1 @@
+{"key": "6df64056592fa2e5", "rules_version": "v1", "stage_a_transforms": false, "rows": 20, "cols": 10, "meta": {}, "warnings": ["数据表 [Sheet1] 命中缓存（同一会话内重复导入，未重复扫描公式/超链接）"], "processed_at": "2026-10-21T13:54:17"}

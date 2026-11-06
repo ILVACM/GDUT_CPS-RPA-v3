@@ -1,0 +1,12 @@
+================================================
+ RPA_Workflow_v3 BUILD INFO
+================================================
+BUILD_TIME      : 2026/11/03 ÖÜ¶þ  0:41:51.41
+EXE_PATH        : D:\cps-gpes_rpa-20250312\v3\build\RPA_Workflow_v3.exe
+CONDA_ENV       : CPS-GPES_RPA-py311
+PYTHON          : Python 3.11.15
+PYINSTALLER     : 6.22.0
+SOURCE_HASH     : e1936d4fe721d2ad
+GIT_REV         : e0e99d4dc034eee90162282c4e08fec16eed30e1
+TESTS_SKIPPED   : 0
+================================================

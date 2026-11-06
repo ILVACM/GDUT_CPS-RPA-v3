@@ -1,0 +1,39 @@
+{
+  "__meta": {
+    "schema_version": "3.1",
+    "created": "2026-11-03 00:42:42",
+    "instance_id": "20261103004206675899"
+  },
+  "name": "GUI 操作",
+  "global": {
+    "keep_db": false
+  },
+  "tables": [
+    {
+      "table_id": "T1",
+      "alias": "履职表单20261017104155-source-sheet_0",
+      "source": {
+        "file": "D:\\cps-gpes_rpa-20250312\\v3\\Test\\zeng\\履职表单20261017104155-source.xlsx",
+        "sheet": "0",
+        "header_row": 1
+      },
+      "sqlite_table": "t1"
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "S1",
+      "type": "supervision_report",
+      "name": "履职表单抽查报告 1",
+      "target_table_id": "T1",
+      "output_table_id": "",
+      "params": {
+        "output_path": "D:\\cps-gpes_rpa-20250312\\v3\\Test\\zeng\\履职表单报告统计-202611030042.xlsx",
+        "workday_count": 0,
+        "extra_table_ids": []
+      },
+      "on_error": "stop",
+      "retry_count": 3
+    }
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "meta": {
+    "workflow_name": "电费月度汇总",
+    "version": "demo-1.0",
+    "data_note": "示例数据，可替换"
+  },
+  "tables": [
+    {
+      "key": "T1",
+      "display": "电费明细表（1月）",
+      "is_input": true,
+      "producer_step": null,
+      "deprecated": false,
+      "business_desc": "从Excel导入的原始电费数据"
+    },
+    {
+      "key": "T2",
+      "display": "用户台账",
+      "is_input": true,
+      "producer_step": null,
+      "deprecated": false,
+      "business_desc": "客户基础信息与用电区域"
+    },
+    {
+      "key": "T3",
+      "display": "筛选结果",
+      "is_input": false,
+      "producer_step": "S1",
+      "deprecated": false,
+      "business_desc": "电费大于500元的记录"
+    },
+    {
+      "key": "T4",
+      "display": "匹配结果",
+      "is_input": false,
+      "producer_step": "S2",
+      "deprecated": false,
+      "business_desc": "带客户信息的电费记录"
+    },
+    {
+      "key": "T5",
+      "display": "统计结果",
+      "is_input": false,
+      "producer_step": "S3",
+      "deprecated": false,
+      "business_desc": "按区域统计的电费汇总"
+    },
+    {
+      "key": "T6",
+      "display": "合并结果",
+      "is_input": false,
+      "producer_step": "S4",
+      "deprecated": false,
+      "business_desc": "统计结果与台账信息合并"
+    }
+  ],
+  "steps": [
+    {
+      "key": "S0",
+      "seq": 1,
+      "name": "数据类型转换",
+      "op_type": "convert_dtype",
+      "business_desc": "把电费金额列统一转换为数值类型",
+      "target_table": "T1",
+      "extra_inputs": [],
+      "output_table": null,
+      "is_end": false,
+      "params": {"columns": "电费金额"},
+      "config_state": "ok"
+    },
+    {
+      "key": "S1",
+      "seq": 2,
+      "name": "条件筛选",
+      "op_type": "filter",
+      "business_desc": "筛选出电费大于500元的记录",
+      "target_table": "T1",
+      "extra_inputs": [],
+      "output_table": "T3",
+      "is_end": false,
+      "params": {"conditions": "电费>500", "output_mode": "new_table"},
+      "config_state": "ok"
+    },
+    {
+      "key": "S2",
+      "seq": 3,
+      "name": "跨表映射匹配",
+      "op_type": "mapping_match",
+      "business_desc": "按客户编号把台账信息匹配进来",
+      "target_table": "T3",
+      "extra_inputs": ["T2"],
+      "output_table": "T4",
+      "is_end": false,
+      "params": {"match_table": "T2", "match_columns": "客户编号", "join_mode": "left"},
+      "config_state": "ok"
+    },
+    {
+      "key": "S3",
+      "seq": 4,
+      "name": "条件统计",
+      "op_type": "aggregate",
+      "business_desc": "按区域统计电费总额",
+      "target_table": "T4",
+      "extra_inputs": [],
+      "output_table": "T5",
+      "is_end": false,
+      "params": {"group_by": "用电区域", "metrics": "电费", "agg_func": "sum"},
+      "config_state": "ok"
+    },
+    {
+      "key": "S4",
+      "seq": 5,
+      "name": "数据表合并",
+      "op_type": "merge_tables",
+      "business_desc": "把统计结果与台账信息合并",
+      "target_table": "T5",
+      "extra_inputs": ["T2"],
+      "output_table": "T6",
+      "is_end": false,
+      "params": {},
+      "config_state": "ok"
+    },
+    {
+      "key": "S5",
+      "seq": 6,
+      "name": "结果导出",
+      "op_type": "export",
+      "business_desc": "把最终结果导出为Excel报表",
+      "target_table": "T6",
+      "extra_inputs": [],
+      "output_table": null,
+      "is_end": true,
+      "params": {"file_name": "月度报表.xlsx"},
+      "config_state": "ok"
+    }
+  ],
+  "initial_statuses": {
+    "S0": "done",
+    "S1": "done",
+    "S2": "failed",
+    "S3": "pending",
+    "S4": "pending",
+    "S5": "pending"
+  },
+  "fail_reasons": {
+    "S2": "电费表缺少『客户编号』列，无法完成匹配"
+  }
+}
